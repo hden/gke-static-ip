@@ -41,7 +41,7 @@ function request (instance, obj = {}) {
   })
 }
 
-function deleteAccessConfig (instance, accessConfig = 'External NAT', networkInterface = 'nic0') {
+function deleteAccessConfig (instance, accessConfig = 'external-nat', networkInterface = 'nic0') {
   return request(instance, {
     method: 'POST',
     uri: '/deleteAccessConfig',
@@ -65,14 +65,16 @@ async function main () {
   if ((instances.size > 0) && (reservedIPs.size > 0)) {
     const availableIPs = Array.from(reservedIPs.values())
     for (let [instance, accessConfig] of instances) {
-      const currentIP = accessConfig.natIP
+      const currentIP = find(accessConfig, 'natIP')
       if (!staticIPs.has(currentIP) && (availableIPs.length > 0)) {
         // Try to replace the ephemeral IP.
         const reservedIP = availableIPs.pop()
         debug('Replcing %s\'s IP from %s to %s.', instance.name, currentIP, reservedIP)
-        // The access config is immutable, so it must be deleted first.
-        await deleteAccessConfig(instance)
-        debug('Removed existing IP for %s', instance.name)
+        if (currentIP) {
+          // The access config is immutable, so it must be deleted first.
+          await deleteAccessConfig(instance, process.env.ACCESS_CONFIG_NAME)
+          debug('Removed existing IP for %s', instance.name)
+        }
         await addAccessConfig(instance, Object.assign({}, accessConfig, { natIP: reservedIP }))
         debug('Assigned reserved IP %s for instance %s.', reservedIP, instance.name)
       }
