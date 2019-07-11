@@ -65,7 +65,7 @@ async function main () {
   debug('Found %d instances.', instances.size)
   if ((instances.size > 0) && (reservedIPs.size > 0)) {
     const availableIPs = Array.from(reservedIPs.values())
-    for (let [instance, accessConfig] of instances) {
+    for (const [instance, accessConfig] of instances) {
       const currentIP = find(accessConfig, 'natIP')
       if (!staticIPs.has(currentIP) && (availableIPs.length > 0)) {
         // Try to replace the ephemeral IP.
