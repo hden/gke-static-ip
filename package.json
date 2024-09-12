@@ -32,6 +32,6 @@
     "underscore": "^1.9.1"
   },
   "devDependencies": {
-    "standard": "17.1.0"
+    "standard": "17.1.1"
   }
 }
