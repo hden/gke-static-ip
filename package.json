@@ -27,7 +27,7 @@
   "dependencies": {
     "@google-cloud/compute": "^5.0.0",
     "debug": "^4.1.0",
-    "dotenv": "^16.0.0",
+    "dotenv": "^17.0.0",
     "obj-case": "^0.2.0",
     "underscore": "^1.9.1"
   },
